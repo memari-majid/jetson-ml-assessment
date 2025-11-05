@@ -332,7 +332,7 @@ class JetsonMLBenchmark:
         print(f"\nTotal Benchmark Time: {self.results['total_benchmark_time']:.1f} seconds")
         
         # Save detailed results to JSON
-        with open('/home/mj/jetson_ml_benchmark_results.json', 'w') as f:
+        with open('gb10_ml_benchmark_results.json', 'w') as f:
             json.dump(self.results, f, indent=2, default=str)
         
         print(f"\nDetailed results saved to: jetson_ml_benchmark_results.json")

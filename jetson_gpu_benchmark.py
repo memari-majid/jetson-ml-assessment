@@ -398,7 +398,7 @@ class JetsonGPUBenchmark:
         print(f"\nTotal Benchmark Time: {self.results['total_benchmark_time']:.1f} seconds")
         
         # Save results
-        output_file = '/home/mj/jetson_gpu_benchmark_results.json'
+        output_file = 'gb10_gpu_benchmark_results.json'
         with open(output_file, 'w') as f:
             json.dump(self.results, f, indent=2, default=str)
         
