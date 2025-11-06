@@ -394,7 +394,8 @@ class UVUChatbot:
         history.append((message, response))
         
         # Stats message
-        stats = f"⚡ {tokens} tokens in {elapsed:.2f}s ({tokens/elapsed:.0f} tok/sec) | Model: {model_name}"
+        tokens_per_sec = tokens / elapsed if elapsed > 0 else 0
+        stats = f"⚡ {tokens} tokens in {elapsed:.2f}s ({tokens_per_sec:.0f} tok/sec) | Model: {model_name}"
         
         return history, stats
     
@@ -508,8 +509,9 @@ else:
 chatbot_app = UVUChatbot()
 
 # Load default model
-print("\n🔄 Loading default model (Llama-3.2-3B for fast startup)...")
-chatbot_app.model_manager.load_model("Llama-3.2-3B (Balanced)")
+print("\n🔄 Loading default model (Llama-3.2-1B for instant startup)...")
+print("  Note: Users can switch to larger models in the UI")
+chatbot_app.model_manager.load_model("Llama-3.2-1B (Fastest)")
 
 # ============================================================================
 # Gradio Interface
@@ -611,7 +613,7 @@ with gr.Blocks(title="UVU GB10 AI Chatbot", theme=gr.themes.Soft(), css=custom_c
         with gr.Row():
             model_selector = gr.Dropdown(
                 choices=list(Config.MODELS.keys()),
-                value="Llama-3.2-3B (Balanced)",
+                value="Llama-3.2-1B (Fastest)",
                 label="🤖 Select AI Model",
                 info="Choose the model that best fits your needs"
             )
