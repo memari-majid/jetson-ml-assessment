@@ -61,9 +61,11 @@ def init_db():
 conn = init_db()
 print("✅ Database initialized")
 
-# Load model
+# Load model (using ungated model that works immediately)
 print("🔄 Loading AI model...")
-MODEL_NAME = "meta-llama/Llama-3.2-1B-Instruct"
+MODEL_NAME = "TinyLlama/TinyLlama-1.1B-Chat-v1.0"  # Ungated model - works without special access
+print(f"   Model: {MODEL_NAME}")
+print("   Note: To use Llama-3.2, request access at https://huggingface.co/meta-llama/Llama-3.2-1B-Instruct")
 
 try:
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, token=HF_TOKEN)
