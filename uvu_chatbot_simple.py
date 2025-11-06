@@ -389,41 +389,16 @@ with gr.Blocks(theme=theme, title="UVU AI Chatbot") as demo:
                     
                     login_status = gr.Markdown("", elem_classes="status-message")
                 
-                # Demo accounts info - perfectly centered and aligned
+                # Demo account info
                 gr.HTML("""
-                <div style="text-align: center; margin-top: 40px; padding: 30px; background: linear-gradient(to bottom right, #f8faf9, #f0f7f4); border-radius: 16px; border: 1px solid #d1e7dd; box-shadow: 0 6px 20px rgba(39,93,56,0.12);">
-                    <div style="margin-bottom: 18px;">
-                        <span style="font-size: 2em;">📚</span>
-                    </div>
-                    <p style="margin: 0 0 20px 0; font-weight: 600; color: #275D38; font-size: 1.15em;">Demo Accounts</p>
-                    
-                    <!-- Student Account -->
-                    <div style="margin: 14px 0; padding: 16px; background: white; border-radius: 10px; border: 1px solid #e5e7eb;">
-                        <p style="margin: 0 0 10px 0; font-weight: 600; color: #275D38; font-size: 1em;">
-                            <span style="margin-right: 6px;">👨‍🎓</span> Student
-                        </p>
-                        <div style="display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap;">
-                            <code style="background: #f3f4f6; padding: 6px 14px; border-radius: 6px; font-size: 0.95em; font-weight: 600; color: #1f2937;">student</code>
-                            <span style="color: #9ca3af; font-weight: 600;">•</span>
-                            <code style="background: #f3f4f6; padding: 6px 14px; border-radius: 6px; font-size: 0.95em; font-weight: 600; color: #1f2937;">student123</code>
-                        </div>
-                    </div>
-                    
-                    <!-- Admin Account -->
-                    <div style="margin: 14px 0; padding: 16px; background: white; border-radius: 10px; border: 1px solid #e5e7eb;">
-                        <p style="margin: 0 0 10px 0; font-weight: 600; color: #275D38; font-size: 1em;">
-                            <span style="margin-right: 6px;">🛡️</span> Administrator
-                        </p>
-                        <div style="display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap;">
-                            <code style="background: #f3f4f6; padding: 6px 14px; border-radius: 6px; font-size: 0.95em; font-weight: 600; color: #1f2937;">admin</code>
-                            <span style="color: #9ca3af; font-weight: 600;">•</span>
-                            <code style="background: #f3f4f6; padding: 6px 14px; border-radius: 6px; font-size: 0.95em; font-weight: 600; color: #1f2937;">admin</code>
-                        </div>
-                    </div>
-                    
-                    <p style="margin: 20px 0 0 0; padding-top: 16px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.9em; line-height: 1.6;">
-                        <strong>New users:</strong> Contact your instructor for access
+                <div style="text-align: center; margin-top: 35px; padding: 25px; background: linear-gradient(135deg, #f8faf9 0%, #f0f7f4 100%); border-radius: 12px; border: 1px solid #e0ebe5;">
+                    <p style="margin: 0 0 12px 0; font-weight: 600; color: #275D38; font-size: 1.05em;">📚 Demo Account</p>
+                    <p style="margin: 0; color: #555; font-size: 0.95em;">
+                        Username: <code style="background: white; padding: 3px 8px; border-radius: 4px; font-weight: 600;">student</code> 
+                        &nbsp;•&nbsp; 
+                        Password: <code style="background: white; padding: 3px 8px; border-radius: 4px; font-weight: 600;">student123</code>
                     </p>
+                    <p style="margin: 15px 0 0 0; color: #666; font-size: 0.85em;">New users: contact your instructor for access</p>
                 </div>
                 """)
             
