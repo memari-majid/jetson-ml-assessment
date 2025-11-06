@@ -51,11 +51,9 @@ def init_db():
         cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", 
                       ("student", hashlib.sha256("student123".encode()).hexdigest()))
         cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", 
-                      ("admin", hashlib.sha256("admin".encode()).hexdigest()))  # Admin password is just "admin"
+                      ("admin", hashlib.sha256("admin123".encode()).hexdigest()))
         conn.commit()
-        print("✅ Demo accounts created: student/student123, admin/admin")
     except:
-        print("ℹ️  Demo accounts already exist")
         pass  # Already exists
     
     return conn
@@ -63,9 +61,48 @@ def init_db():
 conn = init_db()
 print("✅ Database initialized")
 
-# Load model
-print("🔄 Loading AI model...")
-MODEL_NAME = "meta-llama/Llama-3.2-1B-Instruct"
+# Available models for users to choose from
+AVAILABLE_MODELS = {
+    "TinyLlama-1.1B (Fastest)": {
+        "name": "TinyLlama/TinyLlama-1.1B-Chat-v1.0",
+        "size": "1.1B params, ~2GB",
+        "speed": "5,000+ tokens/sec",
+        "access": "✅ No approval needed"
+    },
+    "Llama-3.2-1B (Fast)": {
+        "name": "meta-llama/Llama-3.2-1B-Instruct",
+        "size": "1B params, ~2GB", 
+        "speed": "5,000+ tokens/sec",
+        "access": "⚠️ Requires HF approval"
+    },
+    "Llama-3.2-3B (Balanced)": {
+        "name": "meta-llama/Llama-3.2-3B-Instruct",
+        "size": "3B params, ~6GB",
+        "speed": "3,000+ tokens/sec",
+        "access": "⚠️ Requires HF approval"
+    },
+    "Mistral-7B (Best Quality)": {
+        "name": "mistralai/Mistral-7B-Instruct-v0.2",
+        "size": "7B params, ~14GB",
+        "speed": "2,000+ tokens/sec",
+        "access": "✅ No approval needed"
+    },
+    "CodeLlama-7B (Programming)": {
+        "name": "codellama/CodeLlama-7b-Instruct-hf",
+        "size": "7B params, ~14GB",
+        "speed": "2,000+ tokens/sec",
+        "access": "⚠️ Requires HF approval"
+    }
+}
+
+# Load default model (TinyLlama - works immediately)
+print("🔄 Loading default AI model...")
+DEFAULT_MODEL = "TinyLlama-1.1B (Fastest)"
+MODEL_NAME = AVAILABLE_MODELS[DEFAULT_MODEL]["name"]
+print(f"   Model: {MODEL_NAME}")
+
+# Model cache - store loaded models
+loaded_models = {}
 
 try:
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, token=HF_TOKEN)
@@ -73,16 +110,20 @@ try:
         MODEL_NAME,
         torch_dtype=torch.float16,
         device_map="auto",
+        low_cpu_mem_usage=True,
         token=HF_TOKEN
     )
-    print(f"✅ Model loaded: {MODEL_NAME}")
+    loaded_models[MODEL_NAME] = (model, tokenizer)
+    print(f"✅ Default model loaded: {DEFAULT_MODEL}")
     MODEL_LOADED = True
+    CURRENT_MODEL_NAME = MODEL_NAME
 except Exception as e:
     print(f"⚠️  Model loading issue: {e}")
-    print("  Chatbot will show instructions to users")
+    print("  Chatbot will show model loading instructions")
     model = None
     tokenizer = None
     MODEL_LOADED = False
+    CURRENT_MODEL_NAME = None
 
 # Authentication functions
 def hash_password(password):
@@ -106,10 +147,65 @@ def register_user(username, password):
     except:
         return False, "Username already exists"
 
-# Chat function
-def chat_response(message, history, username):
+# Function to load selected model
+def load_model(model_display_name):
+    """Load the selected model"""
+    global model, tokenizer, MODEL_LOADED, CURRENT_MODEL_NAME
+    
+    if model_display_name not in AVAILABLE_MODELS:
+        return f"❌ Unknown model: {model_display_name}"
+    
+    model_info = AVAILABLE_MODELS[model_display_name]
+    model_name = model_info["name"]
+    
+    # Check if already loaded
+    if model_name == CURRENT_MODEL_NAME:
+        return f"✅ {model_display_name} is already loaded"
+    
+    # Check cache first
+    if model_name in loaded_models:
+        model, tokenizer = loaded_models[model_name]
+        CURRENT_MODEL_NAME = model_name
+        MODEL_LOADED = True
+        return f"✅ Switched to {model_display_name} (from cache)"
+    
+    try:
+        print(f"\n🔄 Loading {model_display_name}...")
+        
+        new_tokenizer = AutoTokenizer.from_pretrained(model_name, token=HF_TOKEN)
+        new_model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            torch_dtype=torch.float16,
+            device_map="auto",
+            low_cpu_mem_usage=True,
+            token=HF_TOKEN
+        )
+        
+        # Clear old model from GPU if needed
+        if model is not None and CURRENT_MODEL_NAME != model_name:
+            del model
+            del tokenizer
+            torch.cuda.empty_cache()
+        
+        model = new_model
+        tokenizer = new_tokenizer
+        loaded_models[model_name] = (model, tokenizer)
+        MODEL_LOADED = True
+        CURRENT_MODEL_NAME = model_name
+        
+        print(f"✅ {model_display_name} loaded successfully!")
+        return f"✅ {model_display_name} loaded!\n\n{model_info['size']} • {model_info['speed']}"
+        
+    except Exception as e:
+        error_msg = str(e)
+        if "gated" in error_msg.lower() or "403" in error_msg:
+            return f"⚠️ {model_display_name} requires HuggingFace access approval.\n\nVisit: https://huggingface.co/{model_name}\nClick 'Agree and access repository'\n\nUsing current model instead."
+        return f"❌ Error loading {model_display_name}: {error_msg}"
+
+# Chat function with selected model support
+def chat_response(message, history, username, selected_model_name):
     if not MODEL_LOADED or model is None:
-        return history + [[message, "⚠️ Model not loaded. Administrator: set HF_TOKEN environment variable and restart."]]
+        return history + [[message, "⚠️ No model loaded. Please select a model from the dropdown above or contact administrator."]]
     
     # Build prompt with history
     prompt = ""
@@ -136,10 +232,10 @@ def chat_response(message, history, username):
     if "Assistant:" in response:
         response = response.split("Assistant:")[-1].strip()
     
-    # Save to database
+    # Save to database with model info
     cursor = conn.cursor()
     cursor.execute("INSERT INTO conversations (username, message, response) VALUES (?, ?, ?)",
-                  (username, message, response))
+                  (username, message, f"[{selected_model_name}] {response}"))
     conn.commit()
     
     return history + [[message, response]]
@@ -423,10 +519,29 @@ with gr.Blocks(theme=theme, title="UVU AI Chatbot") as demo:
             """)
             logout_btn = gr.Button("Sign Out", size="sm", scale=0)
         
+        # Model selector - compact and clean
+        with gr.Row():
+            with gr.Column(scale=2):
+                pass
+            with gr.Column(scale=8):
+                model_selector = gr.Dropdown(
+                    choices=list(AVAILABLE_MODELS.keys()),
+                    value=DEFAULT_MODEL,
+                    label="🤖 AI Model",
+                    info="Choose your AI assistant",
+                    container=True,
+                    scale=1
+                )
+                model_info = gr.Markdown(f"""
+                **{DEFAULT_MODEL}:** {AVAILABLE_MODELS[DEFAULT_MODEL]['size']} • {AVAILABLE_MODELS[DEFAULT_MODEL]['speed']} • {AVAILABLE_MODELS[DEFAULT_MODEL]['access']}
+                """, elem_classes="model-info")
+            with gr.Column(scale=2):
+                pass
+        
         # Clean chat interface (ChatGPT style)
         chatbot = gr.Chatbot(
             value=[],
-            height=500,
+            height=450,
             show_label=False,
             container=False,
             bubble_full_width=False,
@@ -482,12 +597,26 @@ with gr.Blocks(theme=theme, title="UVU AI Chatbot") as demo:
             []                          # Clear chat
         )
     
+    # Model selection logic
+    def on_model_change(selected_model):
+        """Update model info when selection changes"""
+        model_info_obj = AVAILABLE_MODELS[selected_model]
+        info_text = f"**{selected_model}:** {model_info_obj['size']} • {model_info_obj['speed']} • {model_info_obj['access']}"
+        return info_text
+    
+    def load_selected_model(selected_model):
+        """Load the model when user changes selection"""
+        result = load_model(selected_model)
+        info = AVAILABLE_MODELS[selected_model]
+        info_text = f"**{selected_model}:** {info['size']} • {info['speed']} • {info['access']}\n\n{result}"
+        return info_text
+    
     # Chat logic
-    def respond(message, history, username):
+    def respond(message, history, username, selected_model):
         if not message.strip():
             return "", history
         
-        new_history = chat_response(message, history, username)
+        new_history = chat_response(message, history, username, selected_model)
         return "", new_history
     
     # Connect events
@@ -502,15 +631,23 @@ with gr.Blocks(theme=theme, title="UVU AI Chatbot") as demo:
         outputs=[login_group, chat_group, user_state, login_status, chatbot]
     )
     
+    # Model selector events
+    model_selector.change(
+        load_selected_model,
+        inputs=model_selector,
+        outputs=model_info
+    )
+    
+    # Chat events with model selection
     submit.click(
         respond,
-        inputs=[msg, chatbot, user_state],
+        inputs=[msg, chatbot, user_state, model_selector],
         outputs=[msg, chatbot]
     )
     
     msg.submit(
         respond,
-        inputs=[msg, chatbot, user_state],
+        inputs=[msg, chatbot, user_state, model_selector],
         outputs=[msg, chatbot]
     )
 
