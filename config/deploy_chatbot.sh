@@ -34,7 +34,7 @@ echo "  Model: Mistral-7B-Instruct-v0.2 (state-of-the-art)"
 echo ""
 
 # Start the chatbot
-python3 gb10_chatbot.py > chatbot.log 2>&1 &
+python3 scripts/gb10_chatbot.py > logs/chatbot.log 2>&1 &
 CHATBOT_PID=$!
 
 echo "✅ Chatbot started (PID: $CHATBOT_PID)"
@@ -45,8 +45,8 @@ sleep 10
 if ps -p $CHATBOT_PID > /dev/null; then
     echo "✅ Chatbot server is running"
 else
-    echo "❌ Chatbot failed to start. Check chatbot.log"
-    cat chatbot.log
+    echo "❌ Chatbot failed to start. Check logs/chatbot.log"
+    cat logs/chatbot.log
     exit 1
 fi
 
@@ -58,8 +58,8 @@ echo "  LAN:    http://$(hostname -I | awk '{print $1}'):7860"
 
 # Check for gradio share URL in log
 sleep 5
-if grep -q "Running on public URL" chatbot.log; then
-    PUBLIC_URL=$(grep "Running on public URL" chatbot.log | grep -oP 'https://[^ ]+')
+if grep -q "Running on public URL" logs/chatbot.log; then
+    PUBLIC_URL=$(grep "Running on public URL" logs/chatbot.log | grep -oP 'https://[^ ]+')
     echo "  Public: $PUBLIC_URL"
 fi
 
@@ -99,7 +99,7 @@ if [ -z "$NGROK_AUTHTOKEN" ]; then
     echo "For now, starting with random ngrok URL..."
     
     # Start ngrok without custom domain
-    ngrok http 7860 > ngrok.log 2>&1 &
+    ngrok http 7860 > logs/ngrok.log 2>&1 &
     NGROK_PID=$!
     
 else
@@ -111,7 +111,7 @@ else
     
     # Start ngrok with custom domain
     # Note: Custom domains use different syntax
-    ngrok http --url=uvuchatbot.ngrok.app 7860 > ngrok.log 2>&1 &
+    ngrok http --url=uvuchatbot.ngrok.app 7860 > logs/ngrok.log 2>&1 &
     NGROK_PID=$!
 fi
 
@@ -138,14 +138,14 @@ if [ -n "$NGROK_URL" ]; then
     echo ""
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 else
-    echo "  Check ngrok.log for URL or visit http://localhost:4040 (ngrok dashboard)"
+    echo "  Check logs/ngrok.log for URL or visit http://localhost:4040 (ngrok dashboard)"
 fi
 
 echo ""
 echo "📊 System Information:"
 echo "  Chatbot PID: $CHATBOT_PID"
 echo "  ngrok PID: $NGROK_PID"
-echo "  Logs: chatbot.log, ngrok.log"
+echo "  Logs: logs/chatbot.log, logs/ngrok.log"
 echo ""
 echo "To stop:"
 echo "  kill $CHATBOT_PID $NGROK_PID"

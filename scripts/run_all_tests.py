@@ -65,7 +65,7 @@ class JetsonTestRunner:
         print("  STEP 1: System Verification")
         print("="*60)
         
-        result = self.run_command('python3 jetson_verify.py', timeout=60)
+        result = self.run_command('cd /home/majid/Downloads/jetson-ml-assessment/scripts && python3 jetson_verify.py', timeout=60)
         
         self.results['tests_run'].append('verification')
         if result['success']:
@@ -88,7 +88,7 @@ class JetsonTestRunner:
             print("⏩ Skipping (quick mode enabled)")
             return True
         
-        result = self.run_command('python3 jetson_simple_benchmark.py', timeout=300)
+        result = self.run_command('cd /home/majid/Downloads/jetson-ml-assessment/scripts && python3 jetson_simple_benchmark.py', timeout=300)
         
         self.results['tests_run'].append('cpu_benchmark')
         if result['success']:
@@ -97,7 +97,7 @@ class JetsonTestRunner:
             
             # Try to load results
             try:
-                with open('/home/mj/jetson_benchmark_results.json', 'r') as f:
+                with open('../data/jetson_benchmark_results.json', 'r') as f:
                     cpu_results = json.load(f)
                     self.results['test_results']['cpu_benchmark'] = cpu_results
             except:
@@ -129,7 +129,7 @@ class JetsonTestRunner:
             print("   See NEXT_STEPS_PLAN.md for GPU enablement")
             return True  # Not a failure, just skip
         
-        result = self.run_command('python3 jetson_gpu_benchmark.py', timeout=300)
+        result = self.run_command('cd /home/majid/Downloads/jetson-ml-assessment/scripts && python3 jetson_gpu_benchmark.py', timeout=300)
         
         self.results['tests_run'].append('gpu_benchmark')
         if result['success']:
@@ -138,7 +138,7 @@ class JetsonTestRunner:
             
             # Try to load results
             try:
-                with open('/home/mj/jetson_gpu_benchmark_results.json', 'r') as f:
+                with open('../data/jetson_gpu_benchmark_results.json', 'r') as f:
                     gpu_results = json.load(f)
                     self.results['test_results']['gpu_benchmark'] = gpu_results
             except:
@@ -193,7 +193,7 @@ class JetsonTestRunner:
                         print(f"  {model}: {fps:.2f} FPS (batch 8)")
         
         # Save comprehensive results
-        output_file = 'jetson_test_suite_results.json'
+        output_file = '../data/jetson_test_suite_results.json'
         with open(output_file, 'w') as f:
             json.dump(self.results, f, indent=2, default=str)
         

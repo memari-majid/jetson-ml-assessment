@@ -84,15 +84,15 @@ class Config:
         }
     }
     
-    DATA_DIR = Path("chatbot_data")
+    DATA_DIR = Path("../data/chatbot_data")
     DB_PATH = DATA_DIR / "users.db"
     HISTORY_DIR = DATA_DIR / "history"
     DOCUMENTS_DIR = DATA_DIR / "documents"
     
     # Create directories
-    DATA_DIR.mkdir(exist_ok=True)
-    HISTORY_DIR.mkdir(exist_ok=True)
-    DOCUMENTS_DIR.mkdir(exist_ok=True)
+    DATA_DIR.mkdir(exist_ok=True, parents=True)
+    HISTORY_DIR.mkdir(exist_ok=True, parents=True)
+    DOCUMENTS_DIR.mkdir(exist_ok=True, parents=True)
 
 # ============================================================================
 # Database Management

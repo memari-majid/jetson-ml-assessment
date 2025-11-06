@@ -20,8 +20,8 @@ HF_TOKEN = os.environ.get('HF_TOKEN', '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')
 print("✅ HuggingFace token configured")
 
 # Simple config
-DATA_DIR = Path("chatbot_data")
-DATA_DIR.mkdir(exist_ok=True)
+DATA_DIR = Path("../data/chatbot_data")
+DATA_DIR.mkdir(exist_ok=True, parents=True)
 DB_PATH = DATA_DIR / "users.db"
 
 # Initialize database
