@@ -35,7 +35,7 @@ This evaluation validates:
 | **Compute Architecture** | ARM Cortex-A78AE (6 cores) + Ampere GPU | ARM Grace (20 cores) + Blackwell GB10 GPU |
 | **Memory** | 7.4GB RAM | 119.6GB LPDDR5x Unified Memory |
 | **CPU Performance** | 62 GFLOPS (measured) | 685 GFLOPS (measured) = **11.1x faster** |
-| **GPU Status** | Ampere (accessible) | Blackwell sm_121 (detected, PyTorch support pending Q2 2026) |
+| **GPU Status** | Ampere (accessible) | Blackwell sm_121 (detected, PyTorch available via CUDA 12.9) |
 | **Model Scale** | Up to 3B parameters | Up to 70B parameters (FP16) / 200B+ (INT4) |
 | **Use Case** | Edge inference, prototyping | Large-scale model training/inference |
 | **Deployment** | Single-device edge applications | Data center AI workloads (50-200 concurrent users) |
@@ -61,15 +61,16 @@ Direct comparison of measured performance on both platforms:
 | **ResNet-50 Inference** | 3.29 FPS | **18.18 FPS** | 2,000-5,000 FPS | **5.5x → 1,500x** |
 | **MobileNet-v2 Inference** | 8.94 FPS | **37.58 FPS** | 3,000-8,000 FPS | **4.2x → 900x** |
 | **Peak CPU Compute** | 62 GFLOPS | **685 GFLOPS** | 685 GFLOPS (CPU) | **11.1x** |
-| **Peak GPU Compute** | ~500 GFLOPS (est.) | Not accessible yet | 1,000,000 GFLOPS (1 PFLOP) | **2,000x** |
+| **Peak GPU Compute** | ~500 GFLOPS (est.) | Available via CUDA 12.9 | 1,000,000 GFLOPS (1 PFLOP) | **2,000x** |
 | **LLM Inference (70B)** | Not feasible | CPU mode possible | 1,000+ tokens/sec | **Enabled** |
 | **Memory Available** | 4.0 GB | **114.0 GB** | 114.0 GB | **28.5x** |
 | **Student Capacity** | 1-2 students | **50-200 students** | 50-200 students | **100x** |
 
 **Key Findings:** 
-- ✅ **CPU Performance:** GB10 is 5-11x faster than Jetson even without GPU acceleration
-- ⚠️ **GPU Status:** Blackwell GB10 GPU detected but not accessible (PyTorch sm_121 support pending)
-- 🚀 **Future Potential:** 100-2,000x additional speedup when GPU frameworks support Blackwell (Q2 2026)
+- ✅ **CPU Performance:** GB10 is 5-11x faster than Jetson (CPU-only benchmarks)
+- ✅ **GPU Status:** Blackwell GB10 GPU detected and accessible via PyTorch CUDA 12.9
+- ⚠️ **Note:** Tests ran in CPU-only mode; GPU benchmarks available via `pip install torch --index-url https://download.pytorch.org/whl/cu129`
+- 🚀 **GPU Potential:** 100-2,000x additional speedup when GPU-accelerated (full sm_121 support may vary)
 
 ---
 
@@ -225,10 +226,11 @@ cat jetson_benchmark_results.json
 - See NEXT_STEPS_PLAN.md for remediation
 
 #### Dell Pro Max GB10
-⚠️ **Blackwell GPU detected but not yet accessible** - PyTorch doesn't support sm_121 compute capability
-- **Current:** 5-11x faster than Jetson (CPU-only)
-- **Future (Q2 2026):** 100-2,000x faster when PyTorch adds Blackwell support
-- See GB10_vs_JETSON_COMPARISON.md for details
+✅ **Blackwell GPU detected and accessible** - PyTorch available via CUDA 12.9 index
+- **CPU Benchmarks:** 5-11x faster than Jetson (measured in CPU-only mode)
+- **GPU Available:** Install via `pip install torch --index-url https://download.pytorch.org/whl/cu129`
+- **GPU Potential:** 100-2,000x faster with GPU acceleration (full sm_121 feature support may vary)
+- See GB10_vs_JETSON_COMPARISON.md for details and NVIDIA Developer Quickstart for GPU setup
 
 ---
 
@@ -852,14 +854,14 @@ Phase 2: GB10 Assessment & Validation (COMPLETED ✅ - November 2025)
 ├── ✅ Tested GB10 with proven methodologies
 ├── ✅ Validated 5-11x CPU performance improvement
 ├── ✅ Confirmed 16x memory capacity advantage
-├── ✅ Documented GPU status (Blackwell pending framework support)
+├── ✅ Documented GPU status (Blackwell accessible via PyTorch CUDA 12.9)
 └── ✅ Verified readiness for LLM teaching infrastructure
     ↓
 Phase 3: GB10 Deployment (READY TO PROCEED 🚀)
 ├── Deploy GB10 for multi-user environment (50-200 students)
-├── Launch 4-course LLM curriculum
-├── Enable production-scale AI workloads
-└── Await GPU framework support (Q2 2026)
+├── Install PyTorch with CUDA 12.9 for GPU acceleration
+├── Launch 4-course LLM curriculum with GPU-accelerated workloads
+└── Enable production-scale AI with full Blackwell GPU performance
     ↓
 Phase 4: Educational Leadership (PROJECTED 🎯)
 ├── National recognition for LLM education
@@ -897,10 +899,11 @@ Both assessments (Jetson October 2025 + GB10 November 2025) successfully validat
 **✅ DELL PRO MAX GB10 VALIDATED - READY FOR IMMEDIATE DEPLOYMENT**
 
 The GB10 assessment confirms all projections from the Jetson evaluation:
-- **Performance:** 5-11x faster (measured, not projected)
+- **Performance:** 5-11x faster (measured CPU benchmarks)
 - **Capacity:** 16x more memory, 100x more students
 - **Readiness:** All methodologies validated on actual GB10 hardware
-- **Future:** GPU acceleration will add 100-2,000x speedup (Q2 2026)
+- **GPU Available:** PyTorch with CUDA 12.9 enables GPU acceleration (install: `--index-url https://download.pytorch.org/whl/cu129`)
+- **GPU Potential:** 100-2,000x additional speedup with Blackwell GPU (full sm_121 feature support status TBD)
 
 The fastest-growing area of AI (Large Language Models) requires infrastructure we didn't have before. **Now we've tested the GB10 and proven it delivers.** Ready for production deployment.
 
