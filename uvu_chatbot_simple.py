@@ -51,11 +51,9 @@ def init_db():
         cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", 
                       ("student", hashlib.sha256("student123".encode()).hexdigest()))
         cursor.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)", 
-                      ("admin", hashlib.sha256("admin".encode()).hexdigest()))  # Admin password: admin
+                      ("admin", hashlib.sha256("admin123".encode()).hexdigest()))
         conn.commit()
-        print("✅ Demo accounts: student/student123, admin/admin")
     except:
-        print("ℹ️  Demo accounts already exist")
         pass  # Already exists
     
     return conn
