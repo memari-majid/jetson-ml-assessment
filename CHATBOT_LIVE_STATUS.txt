@@ -25,7 +25,7 @@ Student Access:
 
 Admin Access:
   Username: admin
-  Password: admin123
+  Password: admin
   → Gets: Full control panel (5 tabs)
 
 🤖 AI MODEL
@@ -113,7 +113,7 @@ URL: https://uvuchatbot.ngrok.app
 Status: LIVE and accepting users
 AI Model: TinyLlama-1.1B (working)
 Database: Collecting all user data
-Admin: admin/admin123
+Admin: admin/admin
 
 🎓 Utah Valley University - AI/ML Education Platform
 

@@ -52,7 +52,7 @@ ngrok http --url=uvuchatbot.ngrok.app 7860
 - ✅ Secure password hashing (SHA-256)
 
 **Demo Accounts:**
-- Username: `admin`, Password: `admin123`
+- Username: `admin`, Password: `admin`
 - Username: `student`, Password: `student123`
 
 ---

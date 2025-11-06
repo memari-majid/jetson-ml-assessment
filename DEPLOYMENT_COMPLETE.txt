@@ -113,7 +113,7 @@ PUBLIC URL (Share with students):
 
 DEMO ACCOUNTS:
 
-  Admin:    admin / admin123
+  Admin:    admin / admin
   Student:  student / student123
 
 Or students can create their own accounts!

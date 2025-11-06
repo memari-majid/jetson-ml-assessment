@@ -71,7 +71,7 @@
 - No public IP needed
 
 ### 7. ✅ Admin/Student Accounts
-- **Admin:** admin / admin123 (for compatibility)
+- **Admin:** admin / admin
 - **Student:** student / student123
 - Role-based access
 
@@ -164,7 +164,7 @@
 
 **Credentials:**
 - Student: student / student123
-- Admin: admin / admin123
+- Admin: admin / admin
 
 **Capacity:** 150-200 concurrent users
 
@@ -238,7 +238,7 @@ python3 uvu_chatbot_simple.py
 https://uvuchatbot.ngrok.app
 
 # Login
-student / student123  OR  admin / admin123
+student / student123  OR  admin / admin
 
 # Select model from dropdown
 Choose from 5 AI models!

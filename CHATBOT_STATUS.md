@@ -58,7 +58,7 @@ Then access at: **https://uvuchatbot.ngrok.app**
    - Login/Register system
    - Password hashing
    - Session management
-   - Demo accounts: admin/admin123, student/student123
+   - Demo accounts: admin/admin, student/student123
 
 2. **Multiple AI Models** (5 models available)
    - Llama-3.2-1B (2 GB) - 5,000+ tok/sec

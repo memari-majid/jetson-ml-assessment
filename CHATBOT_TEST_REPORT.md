@@ -31,7 +31,7 @@
 
 **Tested:**
 - ✅ Login page loads perfectly
-- ✅ Demo accounts visible (admin/admin123, student/student123)
+- ✅ Demo accounts visible (admin/admin, student/student123)
 - ✅ Login form accepts credentials
 - ✅ Authentication works: "✅ Welcome, student!" displayed
 - ✅ Register form present and functional
