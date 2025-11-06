@@ -114,6 +114,12 @@ AVAILABLE_MODELS = {
         "size": "20B params, ~40GB",
         "speed": "800-1,000 tokens/sec",
         "access": "✅ No approval needed"
+    },
+    "Qwen3-4B-Instruct (Alibaba)": {
+        "name": "Qwen/Qwen3-4B-Instruct-2507",
+        "size": "4B params, ~8GB",
+        "speed": "2,500+ tokens/sec",
+        "access": "✅ No approval needed"
     }
 }
 
